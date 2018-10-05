@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
-import {Link} from 'react-router-dom';
-import {connect} from 'react-redux';
-import {createPost} from '../actions/index';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { createPost } from '../actions/index';
 
 class PostNew extends Component {
     renderField(field) {
         //destructure field.meta.
-        const{meta:{touched,error}}=field;
-        const className=`form-group${touched&&error ? ' has-danger' : ''}`
+        const { meta: { touched, error } } = field;
+        const className = `form-group${touched && error ? ' has-danger' : ''}`
         return (
             <div className={className}>
                 <label>{field.label}</label>
@@ -24,7 +24,16 @@ class PostNew extends Component {
     }
     onSubmit(values) {
         // console.log(values);
-        this.props.createPost(values);
+        //because post_new is part of Route in index.js we have additional props
+
+        // console.log(this.props.history);
+
+        //callback iss needed in order to be sure that we are been navigating back
+        //AFTER the post is created we need to add this callback in aACTION to
+        //this is action creator
+        this.props.createPost(values, () => {
+            this.props.history.push('/');
+        });
     }
     render() {
         const { handleSubmit } = this.props;
@@ -63,5 +72,5 @@ export default reduxForm({
     validate: validate,
     form: 'PostsNewForm'
 })(
-   connect(null,{createPost})(PostNew) 
-    );
+    connect(null, { createPost })(PostNew)
+);

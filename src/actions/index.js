@@ -16,8 +16,12 @@ export function fetchPosts(){
     }
 }
 
-export function createPost(values){
-    const request=axios.post(`${ROOT_URL}/posts${API_KEY}`,values);
+export function createPost(values,callback){
+    //add promise for waiting the callback see POST_NEW
+    //request is a promise so after it resolve we are calling the callback
+    const request=axios.post(`${ROOT_URL}/posts${API_KEY}`,values)
+    //inside here we are calling the callback from POST_NEW
+        .then(()=>callback());
     // console.log(request);
     return{
         type:CREATE_POST,
